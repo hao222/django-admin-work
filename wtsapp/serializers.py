@@ -9,7 +9,7 @@ from rest_framework.fields import CharField, IntegerField, SerializerMethodField
 from rest_framework.serializers import ModelSerializer, Serializer
 
 from v1.drf_utils.auth import create_token
-from wtsapp.models import User, Role, TaskPro
+from wtsapp.models import User, Role, TaskPro, Working
 
 
 class UserSerializer(ModelSerializer):
@@ -67,7 +67,8 @@ class RoleSerializer(ModelSerializer):
 
 class TaskSerializer(ModelSerializer):
     task_process = SerializerMethodField(help_text="进度", required=False)
-
+    parent_id = IntegerField(help_text="任务父类id")
+    user_id = IntegerField(help_text="")
     class Meta:
         model = TaskPro
         fields = ("id", "task_process", "user_id", "task_name", "start_at", "end_at", "task_status", "parent_id" )
@@ -82,3 +83,12 @@ class TaskSerializer(ModelSerializer):
         except ZeroDivisionError:
             return "0.00%"
         return f"{percent:.2%}"
+
+
+class WorkSerializer(ModelSerializer):
+    taskpro_id = IntegerField(help_text="关联任务id")
+
+    class Meta:
+        model = Working
+        fields = ("id", "taskpro_id", "work_start", "work_end", "approve_status", "approve_time", "fail_reasons", "work_info", "work_time")
+

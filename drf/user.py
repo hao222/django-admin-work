@@ -92,3 +92,31 @@ class TaskPermissions(BaseViewsPermissions):
                 return True
             return False
         return False
+
+
+# class WorkPermissions(BaseViewsPermissions):
+#     """ Task """
+#
+#     @staticmethod
+#     def has_permission_delete(request, view):
+#         if request.user:
+#             if request.user.instance.role in ["管理员", "项目负责人"] or request.user.instance.role is None:
+#                 return True
+#             return False
+#         return False
+#
+#     @staticmethod
+#     def has_permission_create(request, view):
+#         if request.user:
+#             if request.user.instance.role in ["管理员", "项目负责人"] or request.user.instance.role is None:
+#                 return True
+#             return False
+#         return False
+#
+#     @staticmethod
+#     def has_permission_update(request, view):
+#         if request.user:
+#             if request.user.instance.role in ["管理员", "项目负责人"] or request.user.instance.role is None:
+#                 return True
+#             return False
+#         return False

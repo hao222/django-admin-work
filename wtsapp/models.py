@@ -92,7 +92,7 @@ class Working(BaseModel):
     approve_status = IntegerField(
         choices=WStatusEnum.choices(), default=WStatusEnum.default(),
         verbose_name='审批状态', name='approve_status')
-    approve_time = DateTimeField(help_text="审批通过时间")
+    approve_time = DateTimeField(help_text="审批通过时间", default=None, blank=True, null=True)
     fail_reasons = CharField(max_length=32, default="", blank=True, null=True, help_text="未通过原因")
     work_info = CharField(max_length=1024, default="", blank=True, null=True, help_text="工时内容")
     work_time = CharField(max_length=32, default="0", help_text="工作时长", null=True, blank=True)
@@ -111,6 +111,9 @@ class OpetationLog(BaseModel):
     operation = CharField(
         max_length=32, verbose_name='操作内容', help_text='操作内容',
         name='operation')
+    operation_name = CharField(
+        max_length=32, verbose_name='修改人', help_text='修改人',
+        name='operation_name', blank=True, null=True, default="")
 
 
 class AuthUser:
