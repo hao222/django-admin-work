@@ -1,10 +1,13 @@
 from django.contrib.auth.models import AbstractUser
+from django.core.validators import RegexValidator
 from django.db import models
 
 # Create your models here.
 from django.db.models import CharField, IntegerField, ForeignKey, CASCADE, DateTimeField
 
 from v1.models_helper.enums import StatusEnum, WStatusEnum, TStatusEnum
+
+phone_validator = RegexValidator(r"^1[3456789][0-9]{9}$", "请输入正确的手机号码。")
 
 
 class BaseModel(models.Model):
@@ -31,7 +34,7 @@ class User(AbstractUser, BaseModel):
     """
     用户信息
     """
-    phone = CharField(max_length=11, default=None, null=True, db_index=True)
+    phone = CharField(max_length=11, default=None, null=True, db_index=True, validators=[phone_validator])
     status = IntegerField(
         choices=StatusEnum.choices(), default=StatusEnum.default(),
         verbose_name='状态', name='status')
@@ -60,19 +63,22 @@ class TaskPro(BaseModel):
     task_status = IntegerField(
         choices=TStatusEnum.choices(), default=TStatusEnum.default(),
         verbose_name='任务状态', name='task_status')
-    parent = ForeignKey('self', null=True, default=None, on_delete=models.CASCADE, related_name='children')
-
-
-    @property
-    def task_process(self):
-        """
-        任务进度
-        :return:
-        """
-        childrens = self.children.count()
-        success_chids = self.children.filter( task_status=2).count()
-        percent = success_chids / childrens
-        return f"{percent:.2%}"
+    parent = ForeignKey('self', null=True, default=None, on_delete=models.CASCADE, related_name='children', blank=True, name='parent', db_column="parent_id")
+    creator = CharField(max_length=32, default="", null=True, blank=True, verbose_name="任务创建者")
+    task_process = CharField(
+        max_length=2, verbose_name='任务进度', help_text='任务进度，0-100', default="0",
+        name='task_process')
+    task_info = CharField(max_length=1024, default="", verbose_name="任务内容", name="task_info")
+    # @property
+    # def task_process(self):
+    #     """
+    #     任务进度
+    #     :return:
+    #     """
+    #     childrens = self.children.count()
+    #     success_chids = self.children.filter( task_status=2).count()
+    #     percent = success_chids / childrens
+    #     return f"{percent:.2%}"
 
     def __str__(self):
         return f"任务名: {self.task_name}"
@@ -93,9 +99,10 @@ class Working(BaseModel):
         choices=WStatusEnum.choices(), default=WStatusEnum.default(),
         verbose_name='审批状态', name='approve_status')
     approve_time = DateTimeField(help_text="审批通过时间", default=None, blank=True, null=True)
-    fail_reasons = CharField(max_length=32, default="", blank=True, null=True, help_text="未通过原因")
+    reasons = CharField(max_length=32, default="", blank=True, null=True, help_text="建议")
     work_info = CharField(max_length=1024, default="", blank=True, null=True, help_text="工时内容")
     work_time = CharField(max_length=32, default="0", help_text="工作时长", null=True, blank=True)
+    approveor = CharField(max_length=32, default="", help_text="审批人", null=True, blank=True)
 
     def __str__(self):
         return f"工时父类: {self.taskpro.task_name}"

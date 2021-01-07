@@ -6,6 +6,9 @@
 """
 from rest_framework import permissions
 
+from v1.utils import check_permission
+
+
 class BaseViewsPermissions(permissions.BasePermission):
     """  """
 
@@ -25,15 +28,13 @@ class UserPermissions(BaseViewsPermissions):
     @staticmethod
     def has_permission_list(request, view):
         if request.user:
-            if request.user.instance.role in ["管理员", "项目负责人"] or request.user.instance.role is None:
-                return True
-            return False
+            return True
         return False
 
     @staticmethod
     def has_permission_create(request, view):
         if request.user:
-            if request.user.instance.role in ["管理员", "项目负责人"] or request.user.instance.role is None:
+            if check_permission(request.user.instance):
                 return True
             return False
         return False
@@ -44,15 +45,13 @@ class RolePermissions(BaseViewsPermissions):
     @staticmethod
     def has_permission_list(request, view):
         if request.user:
-            if request.user.instance.role in ["管理员", "项目负责人"] or request.user.instance.role is None:
-                return True
-            return False
+            return True
         return False
 
     @staticmethod
     def has_permission_create(request, view):
         if request.user:
-            if request.user.instance.role in ["管理员", "项目负责人"] or request.user.instance.role is None:
+            if check_permission(request.user.instance):
                 return True
             return False
         return False
@@ -60,7 +59,7 @@ class RolePermissions(BaseViewsPermissions):
     @staticmethod
     def has_permission_delete(request, view):
         if request.user:
-            if request.user.instance.role in ["管理员", "项目负责人"] or request.user.instance.role is None:
+            if check_permission(request.user.instance):
                 return True
             return False
         return False
@@ -72,7 +71,7 @@ class TaskPermissions(BaseViewsPermissions):
     @staticmethod
     def has_permission_delete(request, view):
         if request.user:
-            if request.user.instance.role in ["管理员", "项目负责人"] or request.user.instance.role is None:
+            if check_permission(request.user.instance):
                 return True
             return False
         return False
@@ -80,7 +79,7 @@ class TaskPermissions(BaseViewsPermissions):
     @staticmethod
     def has_permission_create(request, view):
         if request.user:
-            if request.user.instance.role in ["管理员", "项目负责人"] or request.user.instance.role is None:
+            if check_permission(request.user.instance):
                 return True
             return False
         return False
@@ -88,7 +87,7 @@ class TaskPermissions(BaseViewsPermissions):
     @staticmethod
     def has_permission_update(request, view):
         if request.user:
-            if request.user.instance.role in ["管理员", "项目负责人"] or request.user.instance.role is None:
+            if check_permission(request.user.instance):
                 return True
             return False
         return False

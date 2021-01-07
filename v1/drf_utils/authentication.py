@@ -33,6 +33,8 @@ def authorizing(authorization):
     token = get_token(authorization)
     if token is None:
         return
+    # if redis_client.get(TOKEN_REDIS_KEY + token):
+    #     return
     user_info = parse_token(token)
     if user_info is None:
         return
@@ -61,7 +63,7 @@ def get_token(authorization):
         return
     auth_type = authorization[:7]
     token = authorization[7:].strip()
-    if auth_type.lower() != 'bearer ':
+    if auth_type.lower().strip() != 'bearer':
         return
     return token
 

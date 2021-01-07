@@ -19,6 +19,9 @@ router.register(r'role', views.RoleViewSet, basename="roleviewset")    # 角色
 router.register(r'task', views.TaskViewSet, basename="taskviewset")    # 任务管理
 router.register(r'work', views.WorkingViewSet, basename="workingviewset")    # 工时模块
 
+router.register(r'operate', views.OperateLogViewSet, basename="operatelogviewset")    # 操作日志
+
+
 # 将router 放入django url中
 urlpatterns = [
     path('', include(router.urls)),
