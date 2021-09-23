@@ -15,3 +15,6 @@ print(" test for feature2222")
 print("这是予发布分枝")
 
 print("这是修改bugfix")
+
+
+print("commit -m 一些注释")
